@@ -2,7 +2,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var util = require('util');
-var debug = util.debuglog('mosh');
+var debug = console.error;
 function getIp(){
   var interfaces = require('os').networkInterfaces();
   for (var devName in interfaces) {
@@ -18,7 +18,7 @@ function getIp(){
 
 debug('ip: %s', getIp());
 
-exec('mosh-server new', function(err,stdout,stderr){
+exec(util.format('mosh-server %s',process.argv.slice(2).join(' ')), function(err,stdout,stderr){
     // output has 1 newline and then the MOSH CONNECT string
     var re = /^MOSH CONNECT (6\d{4}) ([!-~]+)$/;
     var matches = stdout.split('\n').map(function(s){ var m = s.match(re); return m?m[1]:''; }).join('');
